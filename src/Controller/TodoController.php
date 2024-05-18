@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 #[Route('/todo')]
 class TodoController extends AbstractController{
+    
+    
 
     #[Route('/', name: 'app_todo')]
     public function index(Request $request): Response
@@ -25,9 +28,9 @@ class TodoController extends AbstractController{
             $session->set("todos",$todos);
             $this->addFlash('info',"La liste vient d'etre initialisé");
         }
-        return $this->render('todo/index.html.twig');
+        return $this->render('todo/index.html.twig',["title"=>'todo List',"pageTitle"=>"this is the list for today"]);
     }
-    #[Route('/addTodo/{name}/{content}', name: 'todo.add')]
+    #[Route('/addTodo/{name}/{content}', name: 'todo.add',defaults: ['name'=>'day','content'=>'sf6'])]
     public function addTodo(Request $request,$name,$content): RedirectResponse
     {
         $session =$request->getSession();
@@ -127,5 +130,14 @@ class TodoController extends AbstractController{
         return $this->redirectToRoute('app_todo');
     }
 
+    #[Route('/multi/{entier1}/{entier2}',name: 'multiplication',requirements: ['entier1'=>'\d+','entier2'=>'\d+'])]
+    public function multiplication(Request $req)
+    {
+        $entier1= $req->get('entier1');
+        $entier2= $req->get('entier2');
+        $methode=$req->getMethod();
+        $result = $entier1 * $entier2;
+        return new Response("<h1>$methode : $result</h1>");
+    }
 }
 

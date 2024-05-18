@@ -11,8 +11,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class FirstController extends AbstractController
+
+
 {
-    #[Route('/first', name: 'app_first')]
+
+
+    #[Route('/order/{maVar}')]
+    public function test_ord_ ($maVar)
+    {
+        return new Response($maVar);
+    }
+
+    #[Route('/first', name: 'first')]
     public function index(): Response
     {
         //die("je suis la requette /first");
@@ -30,10 +40,18 @@ class FirstController extends AbstractController
     {
         //die("je suis la requette /first");
         $rand=rand(0,10);
+        $user=new User("khalil");
 
+        $user->setAge(19);
         return $this->render('first/hello.html.twig', [
             'controller_name' => 'Controller First',
-            'nameUser'=>new User("khalil"),
+            'user'=>$user
         ]);
+    }
+    #[Route('/template', name: 'template')]
+    public function template(): Response
+    {
+        //die("je suis la requette /first");
+        return $this->render('template.html.twig');
     }
 }

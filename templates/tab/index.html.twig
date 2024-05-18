@@ -1,0 +1,20 @@
+{% extends 'template.html.twig' %}
+{% block title %}Document {% endblock %}
+{% block pageTitle %} Result Statics {%  endblock %}
+{%  block body %}
+
+<table class="table">
+    {% for note in notes %}
+    <tr>
+        <td>{{ note }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="alert alert-info">
+    {%  set nb= notes|length  %}
+    <p>nombre de note : {{ notes | length }}</p>
+    <p>la note ninimale  : {{ min(notes) }}</p>
+    <p>la note maximal : {{  max(notes) }}</p>
+    <p>la moyenne : {{ notes | reduce((carry, item) => carry + item, 0)/ nb }}</p>
+</div>
+{% endblock %}

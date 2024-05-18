@@ -1,0 +1,37 @@
+
+{%  extends 'template.html.twig' %}
+{%  block title %}users{% endblock %}
+{% block pageTitle %}Users{% endblock %}
+
+{%  block body %}
+
+ {{  include('fragment/dateJour.html.twig')}}
+    <div class="alert alert-warning">
+        <a href="{{ path('app_tab',{n:5}) }}">stats</a>
+    </div>
+<table class="table">
+
+        <tr>
+            <td>firstname</td>
+            <td>name</td>
+            <td>age</td>
+        </tr>
+
+    <tbody>
+    {% for user in users %}
+        {% if user.age >= 20 %}
+            {% set type = "danger" %}
+        {% else %}
+            {% set type = "success" %}
+        {% endif %}
+        <tr class="table-{{ type }}">
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.age }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+{% endblock %}

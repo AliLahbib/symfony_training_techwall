@@ -1,0 +1,15 @@
+{% extends 'heritage.html.twig' %}
+{% block titreDocument %}
+nouveau titre
+{% endblock %}
+
+{% block corpsduDocument %}
+<ol>
+    <li>nouveau contenu</li>
+    <li>ahhahahahahah</li>
+    {% block haha %}
+        <li>par default</li>
+    {%  endblock %}
+</ol>
+{%  endblock %}
+
