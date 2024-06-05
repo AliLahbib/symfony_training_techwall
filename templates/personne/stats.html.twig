@@ -1,0 +1,31 @@
+{% extends 'template.html.twig' %}
+
+{% block body %}
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card bg-primary text-white mb -4">
+                <div class="card-body"> Moyenne des Personne entre {{ ageMin }} et {{ ageMax }}</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a  class="small text-white stretched-link">{{ stats['moyAge'] }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card bg-secondary text-white mb -4">
+                <div class="card-body"> Nombres des Personne entre {{ ageMin }} et {{ ageMax }}</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a  class="small text-white stretched-link">{{ stats['nbrePersonnes'] }}</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

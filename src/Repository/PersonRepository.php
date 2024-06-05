@@ -21,20 +21,19 @@ class PersonRepository extends ServiceEntityRepository
         parent::__construct($registry, Person::class);
     }
 
-//    /**
-//     * @return Person[] Returns an array of Person objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
+    /**
+     * @return Person[] Returns an array of Person objects
+     */
+    public function findByName($value): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name like  :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->orderBy('p.name', 'ASC')
 //            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Person
 //    {
@@ -45,4 +44,13 @@ class PersonRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function statsPersonByAgeIntervale($ageMin, $ageMax)
+    {
+        return $this->createQueryBuilder('p')
+            ->select("count(p.id) as nbrePersonnes, avg(p.age) as moyAge")
+            ->andWhere("p.age>= :ageMin and p.age<= :ageMax")
+            ->setParameter('ageMax',$ageMax)
+            ->setParameter('ageMin',$ageMin)
+            ->getQuery()->getScalarResult();
+    }
 }

@@ -3,9 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Person
 {
     #[ORM\Id]
@@ -22,15 +27,38 @@ class Person
     #[ORM\Column]
     private ?int $age = null;
 
+
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $job = null;
+    private ?string $avatar = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $name = null;
+
+    #[ORM\OneToOne( inversedBy: 'person', cascade: ['persist', 'remove'])]
+    private ?Profile $profile = null;
+
+
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'people')]
+    private ?Job $job = null;
+
+    public function __construct()
+    {
+        $this->hobbies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -73,15 +101,94 @@ class Person
         return $this;
     }
 
-    public function getJob(): ?string
+
+
+
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?Profile $profile): static
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+
+
+
+    public function getJob(): ?Job
     {
         return $this->job;
     }
 
-    public function setJob(?string $job): static
+    public function setJob(?Job $job): static
     {
         $this->job = $job;
 
         return $this;
+    }
+    #[ORM\PrePersist()]
+    public function onPrePersist(){
+        $this->createdAt=new \DateTime();
+        $this->updatedAt=new \DateTime();
     }
 }

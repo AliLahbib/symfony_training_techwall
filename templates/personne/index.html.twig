@@ -1,0 +1,195 @@
+{% extends 'template.html.twig' %}
+
+{% block pageTitle %}
+    Personnes
+{% endblock%}
+
+{% block title %}
+    Listes des Personnes
+{% endblock %}
+
+{% block body %}
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div>
+        <button class="btn-primary " ><a href="{{ path('personne.add') }}">add</a></button>
+    </div>
+    <div class="d-flex justify-content-end mb-3">
+        <form action="{{ path('personne.findByName') }}"  class="d-flex" method="post">
+            <div class="form-group me-2">
+                <input  type="search" name="search" placeholder="Rechercher par nom" class="form-control me-2">
+            </div>
+            <button type="submit" class="btn btn-outline-success">Rechercher</button>
+        </form>
+    </div>
+
+    {% if personnes|length > 0 %}
+        <div class="row">
+            {% set items_per_page = 10 %}
+            {% set total_pages = (personnes|length // items_per_page) + 1 %}
+            {% set current_page = app.request.query.get('page', 1) %}
+            {% set start_index = (current_page - 1) * items_per_page %}
+            {% set end_index = (current_page * items_per_page) - 1 %}
+
+            {% for personne in personnes|slice(start_index, items_per_page) %}
+                <div class="col-md-6">
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">ID : {{ personne.id }}</h5>
+                            <h5 class="card-title">Name : {{ personne.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ personne.firstname }} {{ personne.lastname }}</h6>
+                            <p class="card-text">Age : {{ personne.age }}</p>
+
+                            <button type="button" class="btn btn-info" onclick="loadPersonDetails({{ personne.id }})" data-bs-toggle="modal" data-bs-target="#personDetailModal">Détails</button>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ path('personne.delete', {'id': personne.id}) }}')">Supprimer</button>
+{#                            <button type="button" class="btn btn-primary" onclick="showEditForm({{ personne.id }})">Modifier</button>#}
+                            <button type="button" class="btn btn-primary" onclick="showEditForm({{ personne.id }})">Modifier</button>
+                            <script>
+                                function confirmDelete(deleteUrl) {
+                                    if (confirm("Êtes-vous sûr de vouloir supprimer cette personne ?")) {
+                                        window.location.href = deleteUrl;
+                                    }
+                                }
+                            </script>
+                            <form  id="edit-form-{{ personne.id }}" style="display: none;" action="{{ path('personne.edit', {'id': personne.id}) }}" method="post">
+                                <div class="edit-form-group mb-3">
+                                    <label for="editName{{ personne.id }}" class="form-label">Nom</label>
+                                    <input type="text" class="form-control" id="editName{{ personne.id }}" name="name" value="{{ personne.name }}">
+                                </div>
+                                <div class="edit-form-group mb-3">
+                                    <label for="editFirstname{{ personne.id }}" class="form-label">Prénom</label>
+                                    <input type="text" class="form-control" id="editFirstname{{ personne.id }}" name="firstname" value="{{ personne.firstname }}">
+                                </div>
+                                <div class="edit-form-group mb-3">
+                                    <label for="editLastname{{ personne.id }}" class="form-label">Nom de famille</label>
+                                    <input type="text" class="form-control" id="editLastname{{ personne.id }}" name="lastname" value="{{ personne.lastname }}">
+                                </div>
+                                <div class="edit-form-group mb-3">
+                                    <label for="editAge{{ personne.id }}" class="form-label">Âge</label>
+                                    <input type="number" class="form-control" id="editAge{{ personne.id }}" name="age" value="{{ personne.age }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                              <button type="button" class="btn btn-secondary" onclick="showEditForm({{ personne.id }})">Fermer</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+        </div>
+
+        {% if total_pages > 1 %}
+            <div class="row justify-content-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if current_page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page - 1})) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for page in 1..total_pages %}
+                            <li class="page-item {% if page == current_page %}active{% endif %}">
+                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': page})) }}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+
+                        {% if current_page < total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page + 1})) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        {% endif %}
+    {% else %}
+        <p class="text-center">Aucune personne trouvée.</p>
+    {% endif %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="personDetailModal" tabindex="-1" aria-labelledby="personDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="personDetailModalLabel">Person Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="personDetailContent">Loading...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadPersonDetails(personId) {
+            // Vérifie si personId est un nombre valide
+            if (!isNaN(personId)) {
+                // Conversion de personId en entier
+                personId = parseInt(personId);
+
+                // Vérifie que personId est un nombre entier positif
+                if (personId >= 0) {
+                    const url = "{{ path('personne.detail', {'id': 'ID_PLACEHOLDER'}) }}".replace('ID_PLACEHOLDER', personId);
+                    // Maintenant, utilisez l'URL pour récupérer les détails de la personne
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('personDetailContent').innerHTML = data;
+                        });
+                } else {
+                    console.error('personId doit être un nombre entier positif.');
+                }
+            } else {
+                console.error('personId doit être un nombre.');
+            }
+
+        }
+        function showEditForm(personId) {
+            console.log("hahahaha");
+            const editForm = document.getElementById('edit-form-' + personId);
+             const editButton = document.querySelector(`[onclick="showEditForm(${personId})"]`); // Get the "Modifier" button
+            if (editForm.style.display === 'none') {
+                editForm.style.display = 'block';
+                editButton.textContent = 'Fermer'; // Change button text to "Fermer"
+            } else {
+                editForm.style.display = 'none';
+                editButton.textContent = 'Modifier'; // Change button text back to "Modifier"
+            }
+        }
+
+
+
+    </script>
+
+
+{% endblock %}
