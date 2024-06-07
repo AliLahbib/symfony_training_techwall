@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use App\Traits\TimeStampTrait;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Profile
 {
+    use TimeStampTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -16,8 +20,8 @@ class Profile
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
-    #[ORM\OneToOne(mappedBy: 'profile', cascade: ['persist', 'remove'])]
-    private ?Person $person = null;
+    #[ORM\Column(length: 50)]
+    private ?string $rs = null;
 
     public function getId(): ?int
     {
@@ -36,25 +40,21 @@ class Profile
         return $this;
     }
 
-    public function getPerson(): ?Person
+    public function getRs(): ?string
     {
-        return $this->person;
+        return $this->rs;
     }
 
-    public function setPerson(?Person $person): static
+    public function setRs(string $rs): static
     {
-        // unset the owning side of the relation if necessary
-        if ($person === null && $this->person !== null) {
-            $this->person->setProfile(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($person !== null && $person->getProfile() !== $this) {
-            $person->setProfile($this);
-        }
-
-        $this->person = $person;
+        $this->rs = $rs;
 
         return $this;
     }
+    public function __toString(): string
+    {
+       return $this->rs." ".$this->url;
+
+    }
+
 }

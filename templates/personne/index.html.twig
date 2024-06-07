@@ -27,9 +27,12 @@
             {{ message }}
         </div>
     {% endfor %}
+
+
     <div>
-        <button class="btn-primary " ><a href="{{ path('personne.add') }}">add</a></button>
+        <a href="{{ path('personne.add') }}" class="btn btn-secondary">Ajouter une personne</a>
     </div>
+
     <div class="d-flex justify-content-end mb-3">
         <form action="{{ path('personne.findByName') }}"  class="d-flex" method="post">
             <div class="form-group me-2">
@@ -59,8 +62,8 @@
 
                             <button type="button" class="btn btn-info" onclick="loadPersonDetails({{ personne.id }})" data-bs-toggle="modal" data-bs-target="#personDetailModal">Détails</button>
                             <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ path('personne.delete', {'id': personne.id}) }}')">Supprimer</button>
-{#                            <button type="button" class="btn btn-primary" onclick="showEditForm({{ personne.id }})">Modifier</button>#}
-                            <button type="button" class="btn btn-primary" onclick="showEditForm({{ personne.id }})">Modifier</button>
+                            <a class="btn btn-primary" href="{{ path('personne.edit',{'id':personne.id}) }}">Modifier</a>
+
                             <script>
                                 function confirmDelete(deleteUrl) {
                                     if (confirm("Êtes-vous sûr de vouloir supprimer cette personne ?")) {
@@ -68,26 +71,7 @@
                                     }
                                 }
                             </script>
-                            <form  id="edit-form-{{ personne.id }}" style="display: none;" action="{{ path('personne.edit', {'id': personne.id}) }}" method="post">
-                                <div class="edit-form-group mb-3">
-                                    <label for="editName{{ personne.id }}" class="form-label">Nom</label>
-                                    <input type="text" class="form-control" id="editName{{ personne.id }}" name="name" value="{{ personne.name }}">
-                                </div>
-                                <div class="edit-form-group mb-3">
-                                    <label for="editFirstname{{ personne.id }}" class="form-label">Prénom</label>
-                                    <input type="text" class="form-control" id="editFirstname{{ personne.id }}" name="firstname" value="{{ personne.firstname }}">
-                                </div>
-                                <div class="edit-form-group mb-3">
-                                    <label for="editLastname{{ personne.id }}" class="form-label">Nom de famille</label>
-                                    <input type="text" class="form-control" id="editLastname{{ personne.id }}" name="lastname" value="{{ personne.lastname }}">
-                                </div>
-                                <div class="edit-form-group mb-3">
-                                    <label for="editAge{{ personne.id }}" class="form-label">Âge</label>
-                                    <input type="number" class="form-control" id="editAge{{ personne.id }}" name="age" value="{{ personne.age }}">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                              <button type="button" class="btn btn-secondary" onclick="showEditForm({{ personne.id }})">Fermer</button>
-                            </form>
+
                         </div>
 
                     </div>
@@ -174,22 +158,7 @@
             }
 
         }
-        function showEditForm(personId) {
-            console.log("hahahaha");
-            const editForm = document.getElementById('edit-form-' + personId);
-             const editButton = document.querySelector(`[onclick="showEditForm(${personId})"]`); // Get the "Modifier" button
-            if (editForm.style.display === 'none') {
-                editForm.style.display = 'block';
-                editButton.textContent = 'Fermer'; // Change button text to "Fermer"
-            } else {
-                editForm.style.display = 'none';
-                editButton.textContent = 'Modifier'; // Change button text back to "Modifier"
-            }
-        }
-
-
-
-    </script>
+        </script>
 
 
 {% endblock %}

@@ -2,30 +2,28 @@
 
 namespace App\Entity;
 
-use App\Repository\JobRepository;
+use App\Repository\HobbyRepository;
 use App\Traits\TimeStampTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: JobRepository::class)]
+#[ORM\Entity(repositoryClass: HobbyRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Job
-
+class Hobby
 
 {
-    use  TimeStampTrait;
-
+    use TimeStampTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 70)]
     private ?string $designation = null;
 
-    #[ORM\OneToMany(targetEntity: Person::class, mappedBy: 'job')]
+    #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'hobbies')]
     private Collection $personnes;
 
     public function __construct()
@@ -62,7 +60,7 @@ class Job
     {
         if (!$this->personnes->contains($personne)) {
             $this->personnes->add($personne);
-            $personne->setJob($this);
+            $personne->addHobby($this);
         }
 
         return $this;
@@ -71,10 +69,7 @@ class Job
     public function removePersonne(Person $personne): static
     {
         if ($this->personnes->removeElement($personne)) {
-            // set the owning side to null (unless already changed)
-            if ($personne->getJob() === $this) {
-                $personne->setJob(null);
-            }
+            $personne->removeHobby($this);
         }
 
         return $this;
