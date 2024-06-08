@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
@@ -21,13 +22,19 @@ class Person
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: "donner un prenom")]
+    #[Assert\Length(min:4,max:50,minMessage: "veuillez avoir au moins 4 caracteres",maxMessage:"veuillez avoir au puls 50 caracteres" ),]
     #[ORM\Column(length: 50)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "donner un nom")]
+    #[Assert\Length(min:4,max:50,minMessage: "veuillez avoir au moins 4 caracteres",maxMessage:"veuillez avoir au puls 50 caracteres" ),]
     private ?string $lastname = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "donner un age")]
+    #[Assert\Positive]
     private ?int $age = null;
 
 
@@ -41,18 +48,33 @@ class Person
     #[ORM\JoinColumn(nullable: true)]
     private ?Profile $profile = null;
 
-    #[ORM\ManyToMany(targetEntity: Hobby::class, inversedBy: 'personnes')]
-    #[ORM\JoinColumn(nullable: true)]
-    private Collection $hobbies;
+
 
     #[ORM\ManyToOne(inversedBy: 'personnes')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Job $job = null;
 
-    public function __construct()
-    {
-        $this->hobbies = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+
+    #[ORM\ManyToMany(targetEntity: Hobby::class, inversedBy: 'personnes', cascade: ['remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private Collection $hobbies;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $jobTitle = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hobbiesTitle = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $rs = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $url = null;
+
+
 
 
 
@@ -183,8 +205,71 @@ class Person
         return $this;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 
 
+    public function __construct()
+    {
+        $this->hobbies = new ArrayCollection();
+    }
+
+    public function getJobTitle(): ?string
+    {
+        return $this->jobTitle;
+    }
+
+    public function setJobTitle(?string $jobTitle): static
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    public function getHobbiesTitle(): ?string
+    {
+        return $this->hobbiesTitle;
+    }
+
+    public function setHobbiesTitle(?string $hobbiesTitle): static
+    {
+        $this->hobbiesTitle = $hobbiesTitle;
+
+        return $this;
+    }
+
+    public function getRs(): ?string
+    {
+        return $this->rs;
+    }
+
+    public function setRs(?string $rs): static
+    {
+        $this->rs = $rs;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): static
+    {
+        $this->url = $url;
+
+        return $this;
+    }
 
 
 

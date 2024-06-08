@@ -2,7 +2,7 @@
 
 {% block pageTitle %}
     Personnes
-{% endblock%}
+{% endblock %}
 
 {% block title %}
     Listes des Personnes
@@ -34,9 +34,9 @@
     </div>
 
     <div class="d-flex justify-content-end mb-3">
-        <form action="{{ path('personne.findByName') }}"  class="d-flex" method="post">
+        <form action="{{ path('personne.findByName') }}" class="d-flex" method="post">
             <div class="form-group me-2">
-                <input  type="search" name="search" placeholder="Rechercher par nom" class="form-control me-2">
+                <input type="search" name="search" placeholder="Rechercher par nom" class="form-control me-2">
             </div>
             <button type="submit" class="btn btn-outline-success">Rechercher</button>
         </form>
@@ -60,9 +60,15 @@
                             <h6 class="card-subtitle mb-2 text-muted">{{ personne.firstname }} {{ personne.lastname }}</h6>
                             <p class="card-text">Age : {{ personne.age }}</p>
 
-                            <button type="button" class="btn btn-info" onclick="loadPersonDetails({{ personne.id }})" data-bs-toggle="modal" data-bs-target="#personDetailModal">Détails</button>
-                            <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ path('personne.delete', {'id': personne.id}) }}')">Supprimer</button>
-                            <a class="btn btn-primary" href="{{ path('personne.edit',{'id':personne.id}) }}">Modifier</a>
+                            <button type="button" class="btn btn-info" onclick="loadPersonDetails({{ personne.id }})"
+                                    data-bs-toggle="modal" data-bs-target="#personDetailModal">Détails
+                            </button>
+                            <button type="button" class="btn btn-danger"
+                                    onclick="confirmDelete('{{ path('personne.delete', {'id': personne.id}) }}')">
+                                Supprimer
+                            </button>
+                            <a class="btn btn-primary"
+                               href="{{ path('personne.edit',{'id':personne.id}) }}">Modifier</a>
 
                             <script>
                                 function confirmDelete(deleteUrl) {
@@ -87,7 +93,9 @@
                     <ul class="pagination">
                         {% if current_page > 1 %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page - 1})) }}" aria-label="Previous">
+                                <a class="page-link"
+                                   href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page - 1})) }}"
+                                   aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
@@ -96,13 +104,16 @@
 
                         {% for page in 1..total_pages %}
                             <li class="page-item {% if page == current_page %}active{% endif %}">
-                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': page})) }}">{{ page }}</a>
+                                <a class="page-link"
+                                   href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': page})) }}">{{ page }}</a>
                             </li>
                         {% endfor %}
 
                         {% if current_page < total_pages %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page + 1})) }}" aria-label="Next">
+                                <a class="page-link"
+                                   href="{{ path(app.request.attributes.get('_route'), app.request.query|merge({'page': current_page + 1})) }}"
+                                   aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
@@ -117,7 +128,8 @@
     {% endif %}
 
     <!-- Modal -->
-    <div class="modal fade" id="personDetailModal" tabindex="-1" aria-labelledby="personDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="personDetailModal" tabindex="-1" aria-labelledby="personDetailModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -158,7 +170,7 @@
             }
 
         }
-        </script>
+    </script>
 
 
 {% endblock %}

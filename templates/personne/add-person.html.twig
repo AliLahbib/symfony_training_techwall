@@ -1,11 +1,14 @@
 {% extends 'template.html.twig' %}
 
 {% block body %}
-    {{ form_start(form) }}
+    {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+
     <div class="row">
         <div class="col">{{ form_row(form.firstname) }}</div>
         <div class="col">{{ form_row(form.lastname) }}</div>
     </div>
+
+
     {{ form_rest(form) }}
 
 
@@ -15,3 +18,10 @@
     Add Person
 {% endblock %}
 
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

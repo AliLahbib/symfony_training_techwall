@@ -35,6 +35,7 @@ class PersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
 //    public function findOneBySomeField($value): ?Person
 //    {
 //        return $this->createQueryBuilder('p')
@@ -53,4 +54,5 @@ class PersonRepository extends ServiceEntityRepository
             ->setParameter('ageMin',$ageMin)
             ->getQuery()->getScalarResult();
     }
+
 }
